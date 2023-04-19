@@ -1,0 +1,11 @@
+/home/khuongduy354/developments/ongoing/search-rs/target/debug/deps/xmlparser-e588459bb3952ba7.rmeta: /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/lib.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/error.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/stream.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/strspan.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/xmlchar.rs
+
+/home/khuongduy354/developments/ongoing/search-rs/target/debug/deps/libxmlparser-e588459bb3952ba7.rlib: /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/lib.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/error.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/stream.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/strspan.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/xmlchar.rs
+
+/home/khuongduy354/developments/ongoing/search-rs/target/debug/deps/xmlparser-e588459bb3952ba7.d: /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/lib.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/error.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/stream.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/strspan.rs /home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/xmlchar.rs
+
+/home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/lib.rs:
+/home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/error.rs:
+/home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/stream.rs:
+/home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/strspan.rs:
+/home/khuongduy354/.cargo/registry/src/github.com-1ecc6299db9ec823/xmlparser-0.13.5/src/xmlchar.rs:
