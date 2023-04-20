@@ -22,29 +22,39 @@ impl<'a> Lexer<'a> {
         result
     }
 
-    //number of indexes needed to skip while predicate hold
-    fn indexes_skipped_while(&mut self, mut predicate: fn(&char) -> bool) -> usize {
-        let mut count = 0;
-        while predicate(&self.source[0]) {
-            count += 1;
+    //move index while predicate holds
+    fn move_idx_while(&mut self, predicate: fn(&char) -> bool) -> usize {
+        let mut n = 0;
+        while n < self.source.len() && predicate(&self.source[n]) {
+            n += 1;
         }
-        count
+        n
     }
     fn trim_white_space(&mut self) {
+        if self.source.len() == 0 {
+            return;
+        }
         while self.source[0].is_whitespace() {
-            self.source = &self.source[1..];
+            if self.source.len() > 1 {
+                self.source = &self.source[1..];
+            } else {
+                self.source = &[];
+                return;
+            }
         }
     }
 
     fn parse_next_token(&mut self) -> Option<&'a [char]> {
         self.trim_white_space();
+        if self.source.len() == 0 {
+            return None;
+        }
         if self.source[0].is_alphabetic() {
-            let mut n = 0;
-            while n < self.source.len() && self.source[n].is_alphanumeric() {
-                n += 1;
-            }
-            // let indexes_skipped = self.indexes_skipped_while(|x| x.is_alphabetic());
-            Some(self.chop_left(n))
+            let end_pos = self.move_idx_while(|x| x.is_alphabetic());
+            Some(self.chop_left(end_pos))
+        } else if self.source[0].is_numeric() {
+            let end_pos = self.move_idx_while(|x| x.is_numeric());
+            Some(self.chop_left(end_pos))
         } else {
             Some(self.chop_left(1))
         }
