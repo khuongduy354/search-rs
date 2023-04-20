@@ -1,6 +1,7 @@
 use std::{
     collections::HashMap,
     fs::{self, File},
+    hash::Hash,
     vec,
 };
 use xml::{reader::XmlEvent, EventReader};
@@ -43,6 +44,7 @@ impl<'a> Lexer<'a> {
             }
         }
     }
+    fn into_hash_map() {}
 
     fn parse_next_token(&mut self) -> Option<&'a [char]> {
         self.trim_white_space();
@@ -59,11 +61,15 @@ impl<'a> Lexer<'a> {
             Some(self.chop_left(1))
         }
     }
+    fn to_hash_map(tok: String, hmap: &mut HashMap<String, i32>) {
+        if let Some(_freq) = hmap.get_mut(&tok) {
+            // hmap.insert(tok, _freq + 1);
+            *_freq += 1;
+        } else {
+            hmap.insert(tok, 1);
+        }
+    }
 }
-
-// fn parse_to_hash_map(source: String) {
-//     let map: HashMap<String, i32> = HashMap::new();
-// }
 
 fn read_all_xml(file_path: &str) -> Result<String, std::io::Error> {
     let mut result = String::from("");
@@ -86,6 +92,9 @@ impl<'a> Iterator for Lexer<'a> {
         self.parse_next_token()
     }
 }
+fn c_to_s<'a>(c: &'a [char]) -> String {
+    c.iter().collect::<String>()
+}
 fn main() {
     let file_path = "docs.gl/gl4/glActiveTexture.xhtml";
     let content = read_all_xml(file_path)
@@ -94,7 +103,11 @@ fn main() {
         .collect::<Vec<_>>();
     // println!("{}", content.iter().collect::<String>());
     let parser = Lexer::new(&content);
+    let mut hmap = HashMap::new();
     for token in parser {
-        println!("{}", token.iter().collect::<String>());
+        let token = c_to_s(token);
+        Lexer::to_hash_map(token, &mut hmap);
+        println!("{:?}", hmap);
+        // println!("{}", token.iter().collect::<String>());
     }
 }

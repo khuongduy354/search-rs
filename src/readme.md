@@ -33,6 +33,12 @@ for thing in baskets{
 }
 ```
 
+Pointer in hashmap 
+```rust 
+let value_ref = hmap.get(&key); 
+*value_ref+=1; //change value in hmap
+```
+
 
 # Design decision 
 - no cursor needed, since chopping is enough
