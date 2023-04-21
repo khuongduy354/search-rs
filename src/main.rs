@@ -1,8 +1,8 @@
+// use std::path::PathBuf;
 use std::{
     collections::HashMap,
     fs::{self, File},
-    hash::Hash,
-    vec,
+    path::{Path, PathBuf},
 };
 use xml::{reader::XmlEvent, EventReader};
 
@@ -96,18 +96,27 @@ fn c_to_s<'a>(c: &'a [char]) -> String {
     c.iter().collect::<String>()
 }
 fn main() {
-    let file_path = "docs.gl/gl4/glActiveTexture.xhtml";
-    let content = read_all_xml(file_path)
-        .expect("cant read file")
-        .chars()
-        .collect::<Vec<_>>();
-    // println!("{}", content.iter().collect::<String>());
-    let parser = Lexer::new(&content);
-    let mut hmap = HashMap::new();
-    for token in parser {
-        let token = c_to_s(token);
-        Lexer::to_hash_map(token, &mut hmap);
-        println!("{:?}", hmap);
-        // println!("{}", token.iter().collect::<String>());
+    let dir_path = "docs.gl/gl4/";
+    let dir = fs::read_dir(dir_path).expect("cant read dir");
+
+    for file in dir {
+        let file = file.expect("Cant read file");
+        let file_path = file.path().to_string_lossy().into_owned();
+
+        let content = read_all_xml(&file_path)
+            .expect("cant read file")
+            .chars()
+            .collect::<Vec<_>>();
+        // println!("{}", content.iter().collect::<String>());
+        let parser = Lexer::new(&content);
+        let mut hmap = HashMap::new();
+
+        for token in parser {
+            let token = c_to_s(token);
+            Lexer::to_hash_map(token, &mut hmap);
+            // println!("{:?}", hmap);
+            // println!("{}", token.iter().collect::<String>());
+        }
+        println!("{} parsed", file_path);
     }
 }

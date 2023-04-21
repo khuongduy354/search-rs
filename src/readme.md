@@ -2,6 +2,18 @@
 - Input a bunch of words
 - Search using tf-idf algo 
 
+# Todo 
+- 1 hashmap for 1 file, makes another hashmap that has file-hashmap for all files in docs.gl 
+- parse that big hashmap to json  
+
+- More lexer features (watch videos)   
+
+
+- Small tricks video? 
+- WASM  
+- 1:21:00 above, heavy algos and computations 
+
+
 # Learned 
 Hashmap vs BTree 
 
