@@ -3,8 +3,8 @@
 - Search using tf-idf algo 
 
 # Todo 
-- 1 hashmap for 1 file, makes another hashmap that has file-hashmap for all files in docs.gl 
-- parse that big hashmap to json  
+<!-- - 1 hashmap for 1 file, makes another hashmap that has file-hashmap for all files in docs.gl  -->
+<!-- - parse that big hashmap to json   -->
 
 - More lexer features (watch videos)   
 

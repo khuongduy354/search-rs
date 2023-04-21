@@ -95,11 +95,21 @@ impl<'a> Iterator for Lexer<'a> {
 fn c_to_s<'a>(c: &'a [char]) -> String {
     c.iter().collect::<String>()
 }
+type TFMap = HashMap<String, i32>;
+type DirMap = HashMap<String, TFMap>;
+const PARSE_LIMIT: i8 = 10;
 fn main() {
     let dir_path = "docs.gl/gl4/";
     let dir = fs::read_dir(dir_path).expect("cant read dir");
+    let mut dir_hmap: DirMap = HashMap::new();
 
     for file in dir {
+        // limit max files parse
+        if dir_hmap.len() == PARSE_LIMIT as usize {
+            return;
+        }
+
+        // parse 1 file to tfmap
         let file = file.expect("Cant read file");
         let file_path = file.path().to_string_lossy().into_owned();
 
@@ -107,16 +117,16 @@ fn main() {
             .expect("cant read file")
             .chars()
             .collect::<Vec<_>>();
-        // println!("{}", content.iter().collect::<String>());
         let parser = Lexer::new(&content);
-        let mut hmap = HashMap::new();
+        let mut tfmap: TFMap = HashMap::new();
 
         for token in parser {
             let token = c_to_s(token);
-            Lexer::to_hash_map(token, &mut hmap);
-            // println!("{:?}", hmap);
-            // println!("{}", token.iter().collect::<String>());
+            Lexer::to_hash_map(token, &mut tfmap);
         }
+
+        // index parsed tfmap
+        dir_hmap.insert(file_path.clone(), tfmap);
         println!("{} parsed", file_path);
     }
 }
