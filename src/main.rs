@@ -2,7 +2,7 @@
 use std::{
     collections::HashMap,
     fs::{self, File},
-    path::{Path, PathBuf},
+    io::Write,
 };
 use xml::{reader::XmlEvent, EventReader};
 
@@ -98,7 +98,27 @@ fn c_to_s<'a>(c: &'a [char]) -> String {
 type TFMap = HashMap<String, i32>;
 type DirMap = HashMap<String, TFMap>;
 const PARSE_LIMIT: i8 = 10;
-fn main() {
+
+fn test_program() {
+    let mut map = HashMap::new();
+    // map.insert("name", "John Doe");
+    let mut map2 = HashMap::new();
+    map2.insert("name", 3);
+    map2.insert("name2", 4);
+
+    let mut map3 = HashMap::new();
+    map2.insert("name", 3);
+    map2.insert("name2", 4);
+    map3.insert("name2", 4);
+    // map.insert("name", "Duy");
+    map.insert("name3", map3);
+    map.insert("name2", map2);
+    // map.insert("age", 30);
+
+    let json = serde_json::to_string(&map).unwrap();
+    println!("{}", json);
+}
+fn main_program() {
     let dir_path = "docs.gl/gl4/";
     let dir = fs::read_dir(dir_path).expect("cant read dir");
     let mut dir_hmap: DirMap = HashMap::new();
@@ -106,7 +126,7 @@ fn main() {
     for file in dir {
         // limit max files parse
         if dir_hmap.len() == PARSE_LIMIT as usize {
-            return;
+            break;
         }
 
         // parse 1 file to tfmap
@@ -129,4 +149,23 @@ fn main() {
         dir_hmap.insert(file_path.clone(), tfmap);
         println!("{} parsed", file_path);
     }
+    let result = parse_dir_to_json(&dir_hmap).expect("cant parse");
+    // println!("{}", result);
+    save_json_to_disk(result, "gl4-dataset.json");
+}
+
+fn save_json_to_disk(data: String, filename: &str) {
+    let mut file = File::create(filename).expect("Cant create");
+    file.write_all(data.as_bytes()).expect("cant write");
+    println!("Saved to disk!");
+}
+fn parse_dir_to_json(
+    hmap: &HashMap<String, HashMap<String, i32>>,
+) -> Result<String, std::io::Error> {
+    let json = serde_json::to_string_pretty(hmap)?;
+    Ok(json)
+}
+fn main() {
+    // test_program();
+    main_program();
 }
