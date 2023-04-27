@@ -1,8 +1,9 @@
 // use std::path::PathBuf;
+use serde_json::Value;
 use std::{
     collections::HashMap,
     fs::{self, File},
-    io::Write,
+    io::{BufReader, Read, Write},
 };
 use xml::{reader::XmlEvent, EventReader};
 
@@ -118,6 +119,46 @@ fn test_program() {
     let json = serde_json::to_string(&map).unwrap();
     println!("{}", json);
 }
+fn test2program() {
+    let dir_path = "docs.gl/gl4/";
+    let dir = fs::read_dir(dir_path).expect("cant read dir");
+    let mut dir_hmap: DirMap = HashMap::new();
+
+    for file in dir {
+        // limit max files parse
+        if dir_hmap.len() == PARSE_LIMIT as usize {
+            break;
+        }
+
+        // parse 1 file to tfmap
+        let file = file.expect("Cant read file");
+        let file_path = file.path().to_string_lossy().into_owned();
+
+        let content = read_all_xml(&file_path)
+            .expect("cant read file")
+            .chars()
+            .collect::<Vec<_>>();
+        let parser = Lexer::new(&content);
+        let mut tfmap: TFMap = HashMap::new();
+
+        for token in parser {
+            let token = c_to_s(token);
+            Lexer::to_hash_map(token, &mut tfmap);
+        }
+
+        // index parsed tfmap
+        dir_hmap.insert(file_path.clone(), tfmap);
+        println!("{} parsed", file_path);
+    }
+
+    let result = parse_dir_to_json(&dir_hmap).expect("cant parse");
+    // println!("{}", result);
+    save_json_to_disk(result, "gl4-datasettest.json");
+    let hmp = load_json_to_hashmap(json_str_from_path("gl4-datasettest.json").expect("No json"))
+        .expect("no json");
+    let newjs = parse_dir_to_json(&hmp).expect("cant parse");
+    save_json_to_disk(newjs, "gl4-datasettest2.json");
+}
 fn main_program() {
     let dir_path = "docs.gl/gl4/";
     let dir = fs::read_dir(dir_path).expect("cant read dir");
@@ -165,7 +206,41 @@ fn parse_dir_to_json(
     let json = serde_json::to_string_pretty(hmap)?;
     Ok(json)
 }
+fn search() {
+    let search = "clear";
+}
+fn json_str_from_path(json_path: &str) -> Result<String, std::io::Error> {
+    let mut file = File::open(json_path).expect("Cant read");
+    let mut data = String::new();
+    file.read_to_string(&mut data)?;
+    // println!("{}", data);
+    // let json_str: String = serde_json::from_str(&data).expect("cant read file");
+    Ok(data)
+}
+fn load_json_to_hashmap(json: String) -> Result<DirMap, std::io::Error> {
+    let data = serde_json::from_str(&json)?;
+    let mut hmap: DirMap = HashMap::new();
+
+    if let Value::Object(inner) = data {
+        for (key, value) in inner {
+            match value {
+                Value::Object(_inner) => {
+                    let mut tf_map: TFMap = HashMap::new();
+                    for (_key, _value) in _inner {
+                        if let Value::Number(freq) = _value {
+                            tf_map.insert(_key, freq.as_i64().expect("Cant cast number") as i32);
+                        }
+                    }
+                    hmap.insert(key, tf_map);
+                }
+                _ => (),
+            }
+        }
+    }
+    Ok(hmap)
+}
+
 fn main() {
-    // test_program();
-    main_program();
+    test2program();
+    // main_program();
 }
