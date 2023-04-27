@@ -7,6 +7,7 @@
 <!-- - parse that big hashmap to json   -->
 
 - More lexer features (watch videos), uppercase, dataset
+- search words => create hashmap, has path-freq of that words
 
 
 - Small tricks video?

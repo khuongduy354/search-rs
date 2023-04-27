@@ -96,9 +96,11 @@ impl<'a> Iterator for Lexer<'a> {
 fn c_to_s<'a>(c: &'a [char]) -> String {
     c.iter().collect::<String>()
 }
-type TFMap = HashMap<String, i32>;
-type DirMap = HashMap<String, TFMap>;
+type TFMap = HashMap<String, i32>; //Term-frequency map
+type DirMap = HashMap<String, TFMap>; //File-TFMap map
+type FFMap = HashMap<String, f32>; //File-Frequency map
 const PARSE_LIMIT: i8 = 10;
+const DATA_PATH: &str = "gl4-datasettest.json";
 
 fn test_program() {
     let mut map = HashMap::new();
@@ -118,6 +120,24 @@ fn test_program() {
 
     let json = serde_json::to_string(&map).unwrap();
     println!("{}", json);
+}
+fn tf_compute(term: &str, tfmap: TFMap) -> f32 {
+    let a = tfmap.get(term).unwrap_or_else(|| &0).to_owned() as f32;
+    let b = tfmap.values().sum::<i32>() as f32;
+    a / b
+}
+fn parse_to_ffmap(term: String) -> Result<FFMap, std::io::Error> {
+    let file = File::open(DATA_PATH)?;
+    let reader = BufReader::new(file);
+    let data: String = serde_json::from_reader(reader)?;
+    let data = serde_json::from_str(&data)?;
+
+    let mut result: FFMap = HashMap::new();
+    let dirmap = load_json_to_hashmap()?;
+    for (path, tfmap) in dirmap {
+        result.insert(path, tf_compute(&term, tfmap));
+    }
+    Ok(result)
 }
 fn test2program() {
     let dir_path = "docs.gl/gl4/";
@@ -154,10 +174,9 @@ fn test2program() {
     let result = parse_dir_to_json(&dir_hmap).expect("cant parse");
     // println!("{}", result);
     save_json_to_disk(result, "gl4-datasettest.json");
-    let hmp = load_json_to_hashmap(json_str_from_path("gl4-datasettest.json").expect("No json"))
-        .expect("no json");
-    let newjs = parse_dir_to_json(&hmp).expect("cant parse");
-    save_json_to_disk(newjs, "gl4-datasettest2.json");
+    // let hmp = load_json_to_hashmap().expect("no json");
+    // let newjs = parse_dir_to_json(&hmp).expect("cant parse");
+    // save_json_to_disk(newjs, "gl4-datasettest2.json");
 }
 fn main_program() {
     let dir_path = "docs.gl/gl4/";
@@ -195,30 +214,23 @@ fn main_program() {
     save_json_to_disk(result, "gl4-dataset.json");
 }
 
+// JSON HELPERS ===>
+
 fn save_json_to_disk(data: String, filename: &str) {
     let mut file = File::create(filename).expect("Cant create");
     file.write_all(data.as_bytes()).expect("cant write");
     println!("Saved to disk!");
 }
+
 fn parse_dir_to_json(
     hmap: &HashMap<String, HashMap<String, i32>>,
 ) -> Result<String, std::io::Error> {
     let json = serde_json::to_string_pretty(hmap)?;
     Ok(json)
 }
-fn search() {
-    let search = "clear";
-}
-fn json_str_from_path(json_path: &str) -> Result<String, std::io::Error> {
-    let mut file = File::open(json_path).expect("Cant read");
-    let mut data = String::new();
-    file.read_to_string(&mut data)?;
-    // println!("{}", data);
-    // let json_str: String = serde_json::from_str(&data).expect("cant read file");
-    Ok(data)
-}
-fn load_json_to_hashmap(json: String) -> Result<DirMap, std::io::Error> {
-    let data = serde_json::from_str(&json)?;
+
+fn load_json_to_hashmap() -> Result<DirMap, std::io::Error> {
+    let data = serde_json::from_reader(File::open(DATA_PATH)?)?;
     let mut hmap: DirMap = HashMap::new();
 
     if let Value::Object(inner) = data {
@@ -241,6 +253,6 @@ fn load_json_to_hashmap(json: String) -> Result<DirMap, std::io::Error> {
 }
 
 fn main() {
-    test2program();
+    // test2program();
     // main_program();
 }
