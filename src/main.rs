@@ -5,6 +5,7 @@ use std::{
     fs::{self, File},
     io::{BufReader, Read, Write},
 };
+use wasm_bindgen::prelude::*;
 use xml::{reader::XmlEvent, EventReader};
 
 // parse string into array of words (called tokens)
@@ -127,11 +128,6 @@ fn tf_compute(term: &str, tfmap: TFMap) -> f32 {
     a / b
 }
 fn parse_to_ffmap(term: String) -> Result<FFMap, std::io::Error> {
-    let file = File::open(DATA_PATH)?;
-    let reader = BufReader::new(file);
-    let data: String = serde_json::from_reader(reader)?;
-    let data = serde_json::from_str(&data)?;
-
     let mut result: FFMap = HashMap::new();
     let dirmap = load_json_to_hashmap()?;
     for (path, tfmap) in dirmap {
@@ -252,7 +248,16 @@ fn load_json_to_hashmap() -> Result<DirMap, std::io::Error> {
     Ok(hmap)
 }
 
-fn main() {
-    // test2program();
-    // main_program();
+#[wasm_bindgen]
+pub fn ranking_docs(term: &str) -> String {
+    let mut result: Vec<String> = vec![];
+    let ffmap = parse_to_ffmap(term.to_string()).expect("cant parse");
+    let mut ffmap = ffmap.into_iter().collect::<Vec<(String, f32)>>();
+    ffmap.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+    for (path, freq) in ffmap {
+        result.push(path);
+    }
+    result.join("\n")
 }
+
+fn main() {}

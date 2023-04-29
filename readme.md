@@ -52,6 +52,8 @@ let value_ref = hmap.get(&key);
 *value_ref+=1; //change value in hmap
 ```
 
+How rust sort works, cmp and stuffs
+
 
 # Design decision 
 - no cursor needed, since chopping is enough
