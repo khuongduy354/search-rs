@@ -15,7 +15,11 @@
 - 1:21:00 above, heavy algos and computations 
 
 
-# Learned 
+# Learned  
+WASM RUST is complicated 
+- read file: cannot use rust file::open 
+- to use npm with rust is more setup
+
 Hashmap vs BTree 
 
 Array vs Vector of char: 
