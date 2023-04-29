@@ -262,7 +262,9 @@ pub fn ranking_docs(term: &str) -> String {
     let mut ffmap = ffmap.into_iter().collect::<Vec<(String, f32)>>();
     ffmap.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
     for (path, freq) in ffmap {
-        result.push(path);
+        if freq != 0.0 {
+            result.push(path);
+        }
     }
     result.join("\n")
 }
