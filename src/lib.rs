@@ -253,6 +253,13 @@ pub fn load_json_to_hashmap(data: &str) -> Result<DirMap, std::io::Error> {
 extern "C" {
     pub fn alert(s: &str);
 }
+#[wasm_bindgen]
+pub fn all_docs() -> String {
+    let data = load_json_to_hashmap(JSONFULL)
+        .expect("cant parse json to hashmap")
+        .into_keys();
+    data.collect::<Vec<String>>().join("\n")
+}
 
 #[wasm_bindgen]
 pub fn ranking_docs(term: &str) -> String {
