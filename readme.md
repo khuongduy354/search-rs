@@ -1,13 +1,26 @@
 # A search engine in Rust  
 - Input a bunch of words
-- Search using tf-idf algo 
+- Search using tf-idf algo  
+- The data source is docs.gl (OpenGl documentation database)
+
+# Install 
+```
+git clone https://github.com/khuongduy354/search-rs  
+cd search-rs
+make build
+make server   
+```   
+- make sure wasm-pack is installed
+- server is launched at localhost:8000
+
 
 # Todo 
 <!-- - 1 hashmap for 1 file, makes another hashmap that has file-hashmap for all files in docs.gl  -->
 <!-- - parse that big hashmap to json   -->
 
 - More lexer features (watch videos), uppercase, dataset 
-- load json wasm
+- load json wasm 
+- chop search keyword
 <!-- - search words => create hashmap, has path-freq of that words -->
 
 
@@ -61,10 +74,17 @@ How rust sort works, cmp and stuffs
 
 
 # Design decision 
+
 - no cursor needed, since chopping is enough
+- store json, when search, load from json to file-frequency map, where each file (key) contains frequency(value) of the word
+this is more efficient, compared to load the whole file-<word-frequency> nested hashmap. 
+- wasm just so messy, so i use json string hardcoded in rust, a more scalable approach might be using js to fetch for json,
+then pass to rust. 
 
 
 # Sources
-idea from: https://www.youtube.com/watch?v=hm5xOJiVEeg&list=WL&index=16&t=3s
-algo: https://en.wikipedia.org/wiki/Tf%E2%80%93idf
-documents: https://github.com/BSVino/docs.gl
+
+- idea from: https://www.youtube.com/watch?v=hm5xOJiVEeg&list=WL&index=16&t=3s
+- algo: https://en.wikipedia.org/wiki/Tf%E2%80%93idf
+- documents: https://github.com/BSVino/docs.gl 
+- running hamster: https://uiverse.io/Nawsome/wet-mayfly-23
