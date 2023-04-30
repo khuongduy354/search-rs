@@ -435,6 +435,9 @@
         border-radius: 3px;
         line-height: 1.3;
       }
+      #object {
+        width: 100%;
+      }
     </style>
     <meta charset="utf-8" />
     <title>hello-wasm example</title>
@@ -448,6 +451,8 @@
     </div>
 
     <ol class="list" id="display-ol"></ol>
+
+    <object id="object" data="" type="application/xhtml+xml"></object>
 
     <div
       aria-label="Orange and tan hamster running in a metal wheel"
@@ -476,19 +481,30 @@
       let topnav = document.getElementById("topnav");
       topnav.style.display = "none";
       init().then(() => {
+        let ol = document.getElementById("display-ol");
         display_results(all_docs().split("\n"));
+        function show_xhtml(path) {
+          ol.innerHTML = "";
+          let object = document.getElementById("object");
+          object.data = path;
+        }
         function display_results(results) {
-          let ol = document.getElementById("display-ol");
           ol.innerHTML = "";
           for (let item of results) {
             let newli = document.createElement("li");
-            newli.textContent = item;
+            let newa = document.createElement("a");
+            newa.textContent = item;
+            newa.href = "#";
+            newa.addEventListener("click", (e) => {
+              show_xhtml(item);
+            });
             newli.classList.add("list-item");
+            newli.appendChild(newa);
             ol.appendChild(newli);
           }
         }
+        var input = document.getElementById("search-field");
         function search() {
-          var input = document.getElementById("search-field");
           var value = input.value;
           if (value == "") {
             display_results(all_docs().split("\n"));
