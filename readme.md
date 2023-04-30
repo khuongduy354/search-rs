@@ -6,12 +6,13 @@
 <!-- - 1 hashmap for 1 file, makes another hashmap that has file-hashmap for all files in docs.gl  -->
 <!-- - parse that big hashmap to json   -->
 
-- More lexer features (watch videos), uppercase, dataset
-- search words => create hashmap, has path-freq of that words
+- More lexer features (watch videos), uppercase, dataset 
+- load json wasm
+<!-- - search words => create hashmap, has path-freq of that words -->
 
 
-- Small tricks video?
-- WASM  
+<!-- - Small tricks video? -->
+<!-- - WASM   -->
 - 1:21:00 above, heavy algos and computations 
 
 

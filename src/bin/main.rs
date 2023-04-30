@@ -4,7 +4,7 @@ use search_rs::*;
 type TFMap = HashMap<String, i32>; //Term-frequency map
 type DirMap = HashMap<String, TFMap>; //File-TFMap map
 type FFMap = HashMap<String, f32>; //File-Frequency map
-const PARSE_LIMIT: i8 = 100;
+const PARSE_LIMIT: i64 = 1000;
 const DATA_PATH: &str = "gl4-datasettest.json";
 
 fn main() {
